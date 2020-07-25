@@ -18,3 +18,4 @@ Snaacky:
 2. Keyboard
 3. Configparser
 4. Colorama
+and maybe some other shit just look the imports
