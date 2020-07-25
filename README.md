@@ -4,11 +4,13 @@ ye
 
 # Credits:
 EthanEDITS:
+
 (https://www.youtube.com/channel/UC9eSgrFjT6igoWzDBwD0j6A "YouTube")
 
 (https://discord.gg/2rB2nTQ "Discord Server")
 
 Snaacky:
+
 (https://github.com/Snaacky "Github")
 
 # Requirements
