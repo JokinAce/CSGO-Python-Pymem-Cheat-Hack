@@ -1,4 +1,4 @@
-import pymem, keyboard, time, os, configparser, math
+import pymem, keyboard, time, os, configparser
 from colorama import Fore, init
 from offsets import *
 init()
