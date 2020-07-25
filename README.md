@@ -16,5 +16,5 @@ Snaacky:
 # Requirements
 1. Pymem
 2. Keyboard
-3. configparser
-4. colorama
+3. Configparser
+4. Colorama
