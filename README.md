@@ -1,6 +1,6 @@
 # CSGO-Python-Pymem-Cheat-Hack
 
-ye
+ye run main.py within a folder where config.ini and offsets.py is present.
 
 # Credits:
 EthanEDITS:
