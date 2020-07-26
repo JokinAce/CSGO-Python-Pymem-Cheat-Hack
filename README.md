@@ -2,13 +2,13 @@
 
 ye run main.py within a folder where config.ini and offsets.py is present.
 
-1.GlowESP
-2.TriggerBot
-3.NoFlash
-4.RecoilSystem
-5.RadarHack
-6.Bhop
-7.CustomFOV
+1. GlowESP
+2. TriggerBot
+3. NoFlash
+4. RecoilSystem
+5. RadarHack
+6. Bhop
+7. CustomFOV
 
 # Credits:
 EthanEDITS:
