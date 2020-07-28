@@ -1,6 +1,6 @@
 import requests, re, math
 
-r = requests.get("https://raw.githubusercontent.com/JokinAce/CSGO-Python-Pymem-Cheat-Hack/master/csgo.hpp?token=ANWTVITBFMELXF2IGF24LJC7EAU66")
+r = requests.get("https://raw.githubusercontent.com/JokinAce/CSGO-Python-Pymem-Cheat-Hack/master/csgo.hpp?token=ANWTVITBFMELXF2IGF24LJC7EAU66") #Link to mine
 r = r.text
 
 
