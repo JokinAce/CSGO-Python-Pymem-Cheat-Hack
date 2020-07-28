@@ -1,6 +1,4 @@
-Inspired by [dannyfritz/commit-message-emoji](https://github.com/dannyfritz/commit-message-emoji)
 
-See also [gitmoji](https://gitmoji.carloscuesta.me/).
 
 |   Commit type              | Emoji                                         |
 |:---------------------------|:----------------------------------------------|
