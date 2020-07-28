@@ -188,6 +188,7 @@ def main():
                 pm.write_int(player + m_iObserverMode, 1)
             else:
                 pm.write_int(player + m_iObserverMode, 0)
+        #ThirdPerson added
 
 if __name__ == "__main__":
     main()
