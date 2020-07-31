@@ -34,7 +34,7 @@ def main():
         customfov = int(mainconfig["customfov"])
         tpkey = mainconfig["tpkey"]
     except:
-        print("Config could not load properly.")
+        print("How the fuck did you break the config?")
         time.sleep(5)
         pass
 
