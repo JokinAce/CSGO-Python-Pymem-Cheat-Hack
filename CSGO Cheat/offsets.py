@@ -37,8 +37,9 @@ m_aimPunchAngle = int(d["m_aimPunchAngle"], base = 16)
 dwClientState = int(d["dwClientState"], base = 16)
 dwClientState_ViewAngles = int(d["dwClientState_ViewAngles"], base = 16)
 m_iObserverMode = int(d["m_iObserverMode"], base = 16)
-
 m_iDefaultFOV = (0x332C)
+
+m_totalHitsOnServer = (0xA3A8)
 
 def normalizeAngles(viewAngleX, viewAngleY):
     if viewAngleX > 89:
@@ -70,3 +71,35 @@ def nanchecker(first, second):
         return False
     else:
         return True
+
+def calc_distance(current_x, current_y, new_x, new_y):
+    distancex = new_x - current_x
+    if distancex < -89:
+        distancex += 360
+    elif distancex > 89:
+        distancex -= 360
+    if distancex < 0.0:
+        distancex = -distancex
+     
+    distancey = new_y - current_y
+    if distancey < -180:
+        distancey += 360
+    elif distancey > 180:
+        distancey -= 360
+    if distancey < 0.0:
+        distancey = -distancey
+    return distancex, distancey
+
+def calcangle(localpos1, localpos2, localpos3, enemypos1, enemypos2, enemypos3):
+    try:
+        delta_x = localpos1 - enemypos1
+        delta_y = localpos2 - enemypos2
+        delta_z = localpos3 - enemypos3
+        hyp = sqrt(delta_x * delta_x + delta_y * delta_y + delta_z * delta_z)
+        x = atan(delta_z / hyp) * 180 / pi
+        y = atan(delta_y / delta_x) * 180 / pi
+        if delta_x >= 0.0:
+            y += 180.0
+        return x, y
+    except:
+        pass

@@ -1,4 +1,4 @@
-import pymem, keyboard, time, os, configparser
+import pymem, keyboard, time, os, configparser, winsound
 from colorama import Fore, init
 from offsets import *
 init()
@@ -33,8 +33,9 @@ def main():
         cfkey = mainconfig["cfkey"]
         customfov = int(mainconfig["customfov"])
         tpkey = mainconfig["tpkey"]
+        hss = mainconfig["hss"]
     except:
-        print("How the fuck did you break the config?")
+        print("Config could not load properly.")
         time.sleep(5)
         pass
 
@@ -57,6 +58,7 @@ def main():
         if client and engine and pm:
             try:
                 player = pm.read_int(client + dwLocalPlayer)
+                hitshit = pm.read_int(player + m_totalHitsOnServer)
                 engine_pointer = pm.read_int(engine + dwClientState)
                 glow_manager = pm.read_int(client + dwGlowObjectManager) 
                 crosshairID = pm.read_int(player + m_iCrosshairId) 
@@ -188,7 +190,10 @@ def main():
                 pm.write_int(player + m_iObserverMode, 1)
             else:
                 pm.write_int(player + m_iObserverMode, 0)
-        #ThirdPerson added
+
+        if hitshit > 0:
+        	pm.write_int(player + m_totalHitsOnServer, 0)
+        	winsound.PlaySound(hss, winsound.SND_FILENAME)
 
 if __name__ == "__main__":
     main()
