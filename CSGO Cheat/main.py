@@ -13,6 +13,7 @@ def main():
 
     oldpunchx = 0.0
     oldpunchy = 0.0
+    hitsoundcount = 0
 
     pm = pymem.Pymem("csgo.exe")
     client = pymem.process.module_from_name(pm.process_handle, "client.dll").lpBaseOfDll
@@ -191,9 +192,9 @@ def main():
             else:
                 pm.write_int(player + m_iObserverMode, 0)
 
-        if hitshit > 0:
-        	pm.write_int(player + m_totalHitsOnServer, 0)
-        	winsound.PlaySound(hss, winsound.SND_FILENAME)
+        if hitshit > hitsoundcount:
+            hitsoundcount += 1
+            winsound.PlaySound(hss, winsound.SND_FILENAME)
 
 if __name__ == "__main__":
     main()
