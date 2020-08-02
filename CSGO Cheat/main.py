@@ -192,9 +192,9 @@ def main():
                 pm.write_int(player + m_iObserverMode, 0)
 
         if hitshit > 0:
-            pm.write_int(player + m_totalHitsOnServer, 0)
-            winsound.PlaySound(hss, winsound.SND_FILENAME)
-            print("Hitsound | Played")
-
+        	pm.write_int(player + m_totalHitsOnServer, 0)
+        	winsound.PlaySound(hss, winsound.SND_FILENAME)
+            print("HitSound | Played")
+            
 if __name__ == "__main__":
     main()
