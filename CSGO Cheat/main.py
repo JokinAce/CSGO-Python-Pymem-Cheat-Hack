@@ -3,7 +3,7 @@ from colorama import Fore, init
 from offsets import *
 init()
 
-def main():
+def Main():
     enablessep = False
     enableflasje = False
     enabrad = False
@@ -34,6 +34,7 @@ def main():
         customfov = int(mainconfig["customfov"])
         tpkey = mainconfig["tpkey"]
         hss = mainconfig["hss"]
+        logeverything = mainconfig.getboolean("logeverything")
     except:
         print("Config could not load properly.")
         time.sleep(5)
@@ -68,7 +69,6 @@ def main():
             except:
                 print("Round not started yet")
                 time.sleep(5)
-                pass
 
         #GlowESP
         for i in range(1,32):
@@ -80,8 +80,8 @@ def main():
                 pm.write_uchar(entity + m_bSpotted, 0)
 
             if entity:
+                entity_glow = pm.read_int(entity + m_iGlowIndex)   
                 entity_team_id = pm.read_int(entity + m_iTeamNum)
-                entity_glow = pm.read_int(entity + m_iGlowIndex)
 
                 if entity_team_id == 2 and (eteam == True or localTeam != 2): #Terrorist Glow
                     pm.write_float(glow_manager + entity_glow * 0x38 + 0x4, float(0)) #R
@@ -107,7 +107,8 @@ def main():
         if keyboard.is_pressed(triggerkey):
             if crosshairID > 0 and crosshairID < 32 and localTeam != crosshairTeam:
                 pm.write_int(client + dwForceAttack, 6)
-                print("TriggerBot | Shot")
+                if logeverything:
+                    print("TriggerBot | Shot")
 
         #KEYBOARD SHORTCUTS
 
@@ -129,7 +130,8 @@ def main():
                 pm.write_int(force_jump, 5)
                 time.sleep(0.08)
                 pm.write_int(force_jump, 4)
-                print("BHop | hopped")
+                if logeverything:
+                    print("BHop | hopped")
 
         #FLASH CONTROL
         if keyboard.is_pressed(nfkey) and player:
@@ -169,7 +171,6 @@ def main():
                 punchy = pm.read_float(player + m_aimPunchAngle + 0x4)
                 newrcsx = rcs_x - (punchx - oldpunchx) * 2
                 newrcsy = rcs_y - (punchy - oldpunchy) * 2
-                newrcs, newrcy = normalizeAngles(newrcsx, newrcsy)
                 oldpunchx = punchx
                 oldpunchy = punchy
                 if nanchecker(newrcsx, newrcsy) and checkangles(newrcsx, newrcsy):
@@ -192,9 +193,10 @@ def main():
                 pm.write_int(player + m_iObserverMode, 0)
 
         if hitshit > 0:
-        	pm.write_int(player + m_totalHitsOnServer, 0)
-        	winsound.PlaySound(hss, winsound.SND_FILENAME)
-            print("HitSound | Played")
-            
+            pm.write_int(player + m_totalHitsOnServer, 0)
+            winsound.PlaySound(hss, winsound.SND_FILENAME)
+            if logeverything:
+                print("HitSound | Played")
+
 if __name__ == "__main__":
-    main()
+    Main()
