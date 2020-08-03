@@ -17,7 +17,7 @@ def Main():
     pm = pymem.Pymem("csgo.exe")
     client = pymem.process.module_from_name(pm.process_handle, "client.dll").lpBaseOfDll
     engine = pymem.process.module_from_name(pm.process_handle, "engine.dll").lpBaseOfDll
-    antivac = "4gjnKhz35cO4d*^wK#ZsPRiTmVBaML&aVU69Iv@!5C#djeNh4pT$rRFo16G!Qtx9uGulKhSeszk5#sgp#p2sK%5L8CYatF!zu5T"
+    antivac = "!1Li%yMx8sy#a2513I$rv@aS4GSVq5*DWH&UVMsTcsV^!s6%Ia#UL#y9s3P*fymZRM*q8*RO2HpNsyP5j1TeUjhDaIiae2vJv"
         # Edit every week so Hash of the file changes
     print(antivac)
     config = configparser.ConfigParser()
@@ -73,7 +73,7 @@ def Main():
         #GlowESP
         for i in range(1,32):
             entity = pm.read_int(client + dwEntityList + i * 0x10)
-            
+
             if entity and enabrad == True:
                 pm.write_uchar(entity + m_bSpotted, 1)
             elif entity and enabrad == False:
@@ -82,6 +82,14 @@ def Main():
             if entity:
                 entity_glow = pm.read_int(entity + m_iGlowIndex)   
                 entity_team_id = pm.read_int(entity + m_iTeamNum)
+
+                entity_isdefusing = pm.read_int(entity + m_bIsDefusing)
+                if entity_isdefusing and localTeam != 3:
+                    winsound.PlaySound(hss, winsound.SND_FILENAME)
+                    # Countdown
+                    time.sleep(1)
+                    if logeverything:
+                        print("Bomb is geting defused")
 
                 if entity_team_id == 2 and (eteam == True or localTeam != 2): #Terrorist Glow
                     pm.write_float(glow_manager + entity_glow * 0x38 + 0x4, float(0)) #R
@@ -176,6 +184,8 @@ def Main():
                 if nanchecker(newrcsx, newrcsy) and checkangles(newrcsx, newrcsy):
                     pm.write_float(engine_pointer + dwClientState_ViewAngles, newrcsx)
                     pm.write_float(engine_pointer + dwClientState_ViewAngles + 0x4, newrcsy)
+                    if logeverything:
+                        print("RecoilSystem | Setting Angle")
             else:
                 oldpunchx = 0.0
                 oldpunchy = 0.0

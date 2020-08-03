@@ -37,10 +37,14 @@ m_aimPunchAngle = int(d["m_aimPunchAngle"], base = 16)
 dwClientState = int(d["dwClientState"], base = 16)
 dwClientState_ViewAngles = int(d["dwClientState_ViewAngles"], base = 16)
 m_iObserverMode = int(d["m_iObserverMode"], base = 16)
-
 m_iDefaultFOV = (0x332C)
-
 m_totalHitsOnServer = (0xA3A8)
+m_bIsDefusing = (0x3930)
+
+#Test Build
+m_flDefuseLength = (0x29A8)
+m_flDefuseCountDown = (0x29AC)
+m_bHasDefuser = (0xB388)
 
 def normalizeAngles(viewAngleX, viewAngleY):
     if viewAngleX > 89:
