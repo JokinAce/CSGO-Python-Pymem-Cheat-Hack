@@ -1,6 +1,6 @@
 import pymem, keyboard, time, os, configparser, winsound
 from colorama import Fore, init
-from offsets import *
+from offsets import m_bGunGameImmunity, normalizeAngles, checkangles, nanchecker, dwEntityList, dwLocalPlayer, m_flFlashMaxAlpha, m_iTeamNum, dwGlowObjectManager, m_iGlowIndex, dwForceJump, m_fFlags, dwForceAttack, m_iCrosshairId, m_bSpotted, m_iShotsFired, m_aimPunchAngle, dwClientState, dwClientState_ViewAngles, m_iObserverMode, m_iDefaultFOV, m_totalHitsOnServer, m_bIsDefusing
 init()
 
 def Main():
@@ -63,9 +63,10 @@ def Main():
                 engine_pointer = pm.read_int(engine + dwClientState)
                 glow_manager = pm.read_int(client + dwGlowObjectManager) 
                 crosshairID = pm.read_int(player + m_iCrosshairId) 
-                getTeam = pm.read_int(client + dwEntityList + (crosshairID - 1) * 0x10)
+                getTarget = pm.read_int(client + dwEntityList + (crosshairID - 1) * 0x10)
+                immunitygunganme = pm.read_int(getTarget + m_bGunGameImmunity)
                 localTeam = pm.read_int(player + m_iTeamNum)
-                crosshairTeam = pm.read_int(getTeam + m_iTeamNum)
+                crosshairTeam = pm.read_int(getTarget + m_iTeamNum)
             except:
                 print("Round not started yet")
                 time.sleep(5)
@@ -113,7 +114,7 @@ def Main():
 
         #TRIGE
         if keyboard.is_pressed(triggerkey):
-            if crosshairID > 0 and crosshairID < 32 and localTeam != crosshairTeam:
+            if crosshairID > 0 and crosshairID < 32 and localTeam != crosshairTeam and immunitygunganme == 0:
                 pm.write_int(client + dwForceAttack, 6)
                 if logeverything:
                     print("TriggerBot | Shot")
@@ -208,5 +209,6 @@ def Main():
             if logeverything:
                 print("HitSound | Played")
 
+    
 if __name__ == "__main__":
     Main()

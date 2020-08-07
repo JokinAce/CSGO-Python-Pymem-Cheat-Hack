@@ -41,10 +41,13 @@ m_iDefaultFOV = (0x332C)
 m_totalHitsOnServer = (0xA3A8)
 m_bIsDefusing = (0x3930)
 
+m_flC4Blow = (0x2990)
+
 #Test Build
+m_bGunGameImmunity = (0x3944)
 m_flDefuseLength = (0x29A8)
 m_flDefuseCountDown = (0x29AC)
-m_bHasDefuser = (0xB388)
+m_iClass = (0xB374)
 
 def normalizeAngles(viewAngleX, viewAngleY):
     if viewAngleX > 89:
@@ -77,20 +80,3 @@ def nanchecker(first, second):
     else:
         return True
 
-def calc_distance(current_x, current_y, new_x, new_y):
-    distancex = new_x - current_x
-    if distancex < -89:
-        distancex += 360
-    elif distancex > 89:
-        distancex -= 360
-    if distancex < 0.0:
-        distancex = -distancex
-     
-    distancey = new_y - current_y
-    if distancey < -180:
-        distancey += 360
-    elif distancey > 180:
-        distancey -= 360
-    if distancey < 0.0:
-        distancey = -distancey
-    return distancex, distancey
