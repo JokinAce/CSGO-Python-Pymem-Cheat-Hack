@@ -9,6 +9,7 @@ ye run main.py within a folder where config.ini and offsets.py is present.
 5. RadarHack
 6. Bhop
 7. CustomFOV
+8. Aimbot
 
 # Credits:
 EthanEDITS:
