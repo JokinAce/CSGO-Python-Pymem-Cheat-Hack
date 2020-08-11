@@ -1,6 +1,6 @@
-import pymem, keyboard, time, os, configparser, winsound
+import pymem, keyboard, time, os, configparser, winsound, mouse
 from colorama import Fore, init
-from offsets import calcangle, calc_distance, normalizeAngles, checkangles, nanchecker, dwEntityList, dwLocalPlayer, m_flFlashMaxAlpha, m_iTeamNum, dwGlowObjectManager, m_iGlowIndex, dwForceJump, m_fFlags, dwForceAttack, m_iCrosshairId, m_bSpotted, m_iShotsFired, m_aimPunchAngle, dwClientState, dwClientState_ViewAngles, m_iObserverMode, m_iDefaultFOV, m_totalHitsOnServer, m_bIsDefusing, m_bGunGameImmunity, m_iHealth, m_dwBoneMatrix, m_vecOrigin, m_vecViewOffset, m_bDormant
+from offsets import calcangle, calc_distance, normalizeAngles, checkangles, nanchecker, dwEntityList, dwLocalPlayer, m_flFlashMaxAlpha, m_iTeamNum, dwGlowObjectManager, m_iGlowIndex, dwForceJump, m_fFlags, dwForceAttack, m_iCrosshairId, m_bSpotted, m_iShotsFired, m_aimPunchAngle, dwClientState, dwClientState_ViewAngles, m_iObserverMode, m_iDefaultFOV, m_totalHitsOnServer, m_bIsDefusing, m_bGunGameImmunity, m_iHealth, m_dwBoneMatrix, m_vecOrigin, m_vecViewOffset, m_bDormant, dwbSendPackets
 init()
 
 def Main():
@@ -10,7 +10,7 @@ def Main():
     enablfov = False
     enablereco = False
     enabltp = False
-    enablab = False
+    testdontenable = False
 
     oldpunchx = 0.0
     oldpunchy = 0.0
@@ -61,13 +61,17 @@ def Main():
     print("Console:")
 
     while True:
+        if testdontenable:
+            pm.write_uchar(engine + dwbSendPackets, 0)
+            time.sleep(0.1)
+            pm.write_uchar(engine + dwbSendPackets, 1)
+                        
         target = None
         olddistx = 111111111111
         olddisty = 111111111111
         #MANAGER
         if client and engine and pm:
             try:
-                #print(m_dwBoneMatrix)
                 player = pm.read_int(client + dwLocalPlayer)
                 hitshit = pm.read_int(player + m_totalHitsOnServer)
                 engine_pointer = pm.read_int(engine + dwClientState)
@@ -98,7 +102,16 @@ def Main():
                     time.sleep(2)
                     continue
 
-                if enablab and player:
+                if entity_hp > 50 and not entity_hp == 100:
+                	r,g,b = 255,165,0
+                elif entity_hp < 50:
+                	r,g,b = 255,0,0
+                elif entity_hp == 100 and entity_team_id == 2:
+                	r,g,b = 0,255,255
+                else:
+                	r,g,b = 0,0,255
+
+                if keyboard.is_pressed(abkey) or mouse.is_pressed(abkey) and player:
                     if localTeam != entity_team_id and entity_hp > 0:
                         entity_bones = pm.read_int(entity + m_dwBoneMatrix)
                         localpos_x_angles = pm.read_float(engine_pointer + dwClientState_ViewAngles)
@@ -123,31 +136,29 @@ def Main():
                         pm.write_float(engine_pointer + dwClientState_ViewAngles + 0x4, normalize_y)
 
                 if enabrad == True:
-                    pm.write_uchar(entity + m_bSpotted, 1)
-                else:
-                    pm.write_uchar(entity + m_bSpotted, 0)
+                    pm.write_int(entity + m_bSpotted, 1)
 
-                if entity_isdefusing and localTeam != 3:
+                if entity_isdefusing and localTeam != 3 and not entity_dormant:
                     winsound.PlaySound(hss, winsound.SND_FILENAME)
                     # Countdown
-                    time.sleep(1)
+                    #time.sleep(1)
                     if logeverything:
                         print("Bomb is geting defused")
 
-                if entity_team_id == 2 and (eteam == True or localTeam != 2): #Terrorist Glow
-                    pm.write_float(glow_manager + entity_glow * 0x38 + 0x4, float(0)) #R
-                    pm.write_float(glow_manager + entity_glow * 0x38 + 0x8, float(1)) #G
-                    pm.write_float(glow_manager + entity_glow * 0x38 + 0xC, float(1)) #B
+                if entity_team_id == 2 and (eteam or localTeam != 2) and not entity_dormant: #Terrorist Glow
+                    pm.write_float(glow_manager + entity_glow * 0x38 + 0x4, float(r)) #R
+                    pm.write_float(glow_manager + entity_glow * 0x38 + 0x8, float(g)) #G
+                    pm.write_float(glow_manager + entity_glow * 0x38 + 0xC, float(b)) #B
                     pm.write_float(glow_manager + entity_glow * 0x38 + 0x10, float(1)) #A
                     if enablessep == True:
                         pm.write_int(glow_manager + entity_glow * 0x38 + 0x24, 1) #Enable
                     else:
                         pm.write_int(glow_manager + entity_glow * 0x38 + 0x24, 0)
 
-                elif entity_team_id == 3 and (eteam == True or localTeam != 3): #Anti Glow
-                    pm.write_float(glow_manager + entity_glow * 0x38 + 0x4, float(0)) #R
-                    pm.write_float(glow_manager + entity_glow * 0x38 + 0x8, float(0)) #G
-                    pm.write_float(glow_manager + entity_glow * 0x38 + 0xC, float(1)) #B
+                elif entity_team_id == 3 and (eteam or localTeam != 3) and not entity_dormant: #Anti Glow
+                    pm.write_float(glow_manager + entity_glow * 0x38 + 0x4, float(r)) #R
+                    pm.write_float(glow_manager + entity_glow * 0x38 + 0x8, float(g)) #G
+                    pm.write_float(glow_manager + entity_glow * 0x38 + 0xC, float(b)) #B
                     pm.write_float(glow_manager + entity_glow * 0x38 + 0x10, float(1)) #A
                     if enablessep == True:
                         pm.write_int(glow_manager + entity_glow * 0x38 + 0x24, 1) #Enable
@@ -249,11 +260,6 @@ def Main():
             winsound.PlaySound(hss, winsound.SND_FILENAME)
             if logeverything:
                 print("HitSound | Played")
-        
-        if keyboard.is_pressed("F"):
-            enablab = not enablab
-            time.sleep(0.2)
-            print("AimBot | " + str(enablab))
     
 if __name__ == "__main__":
     Main()

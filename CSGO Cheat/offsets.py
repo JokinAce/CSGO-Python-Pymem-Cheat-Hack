@@ -48,8 +48,15 @@ m_vecOrigin = int(d["m_vecOrigin"], base = 16)
 m_vecViewOffset = int(d["m_vecViewOffset"], base = 16)
 m_bDormant = int(d["m_bDormant"], base = 16)
 
+dwbSendPackets = (0xD423A)
+
+#m_iAccount = (0xB364)
+
 #Test Build
-#m_flC4Blow = (0x2990)
+##m_flC4Blow = (0x2990)
+#m_bBombPlanted = (0x99D)
+#cs_gamerules_data = (0x0)
+#m_bBombTicking = (0x2980)
 #m_flDefuseLength = (0x29A8)
 #m_flDefuseCountDown = (0x29AC)
 #m_iClass = (0xB374)
