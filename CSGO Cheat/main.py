@@ -1,4 +1,4 @@
-import pymem, keyboard, time, os, configparser, winsound, bimpy
+import pymem, keyboard, time, os, configparser, winsound
 from colorama import Fore, init
 from offsets import calcangle, calc_distance, normalizeAngles, checkangles, nanchecker, dwEntityList, dwLocalPlayer, m_flFlashMaxAlpha, m_iTeamNum, dwGlowObjectManager, m_iGlowIndex, dwForceJump, m_fFlags, dwForceAttack, m_iCrosshairId, m_bSpotted, m_iShotsFired, m_aimPunchAngle, dwClientState, dwClientState_ViewAngles, m_iObserverMode, m_iDefaultFOV, m_totalHitsOnServer, m_bIsDefusing, m_bGunGameImmunity, m_iHealth, m_dwBoneMatrix, m_vecOrigin, m_vecViewOffset, m_bDormant, dwbSendPackets, dwInput, clientstate_last_outgoing_command, clientstate_net_channel
 init()
