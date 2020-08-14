@@ -5,7 +5,7 @@ r = requests.get("https://raw.githubusercontent.com/JokinAce/CSGO-Offsets/master
 r = r.text
 
 
-offsets = ["dwEntityList", "dwLocalPlayer","m_flFlashMaxAlpha", "m_iTeamNum", "dwGlowObjectManager", "m_iGlowIndex", "dwForceJump", "m_fFlags", "dwForceAttack", "m_iCrosshairId", "m_bSpotted", "m_iShotsFired", "m_aimPunchAngle", "dwClientState", "dwClientState_ViewAngles","m_iObserverMode","m_bIsDefusing","m_bGunGameImmunity","m_iHealth","m_dwBoneMatrix","m_vecOrigin","m_vecViewOffset","m_bDormant"]
+offsets = ["dwEntityList", "dwLocalPlayer","m_flFlashMaxAlpha", "m_iTeamNum", "dwGlowObjectManager", "m_iGlowIndex", "dwForceJump", "m_fFlags", "dwForceAttack", "m_iCrosshairId", "m_bSpotted", "m_iShotsFired", "m_aimPunchAngle", "dwClientState", "dwClientState_ViewAngles","m_iObserverMode","m_bIsDefusing","m_bGunGameImmunity","m_iHealth","m_dwBoneMatrix","m_vecOrigin","m_vecViewOffset","m_bDormant","dwbSendPackets","dwInput","clientstate_last_outgoing_command","clientstate_net_channel"]
 
 
 d = {}
@@ -41,25 +41,16 @@ m_iObserverMode = int(d["m_iObserverMode"], base = 16)
 m_bIsDefusing = int(d["m_bIsDefusing"], base = 16)
 m_iHealth = int(d["m_iHealth"], base = 16)
 m_bGunGameImmunity = int(d["m_bGunGameImmunity"], base = 16)
-m_iDefaultFOV = (0x332C)
-m_totalHitsOnServer = (0xA3A8)
+m_iDefaultFOV = (0x332C) # Welp not on Hazedumper (Special Offset)
+m_totalHitsOnServer = (0xA3A8) # Welp not on Hazedumper (Special Offset)
 m_dwBoneMatrix = int(d["m_dwBoneMatrix"], base = 16)
 m_vecOrigin = int(d["m_vecOrigin"], base = 16)
 m_vecViewOffset = int(d["m_vecViewOffset"], base = 16)
 m_bDormant = int(d["m_bDormant"], base = 16)
-
-dwbSendPackets = (0xD423A)
-
-#m_iAccount = (0xB364)
-
-#Test Build
-##m_flC4Blow = (0x2990)
-#m_bBombPlanted = (0x99D)
-#cs_gamerules_data = (0x0)
-#m_bBombTicking = (0x2980)
-#m_flDefuseLength = (0x29A8)
-#m_flDefuseCountDown = (0x29AC)
-#m_iClass = (0xB374)
+dwbSendPackets = int(d["dwbSendPackets"], base = 16)
+dwInput = int(d["dwInput"], base = 16)
+clientstate_last_outgoing_command = int(d["clientstate_last_outgoing_command"], base = 16)
+clientstate_net_channel = int(d["clientstate_net_channel"], base = 16)
 
 def normalizeAngles(viewAngleX, viewAngleY):
     if viewAngleX > 89:

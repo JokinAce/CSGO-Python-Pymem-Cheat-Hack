@@ -1,6 +1,6 @@
-import pymem, keyboard, time, os, configparser, winsound, mouse
+import pymem, keyboard, time, os, configparser, winsound, bimpy
 from colorama import Fore, init
-from offsets import calcangle, calc_distance, normalizeAngles, checkangles, nanchecker, dwEntityList, dwLocalPlayer, m_flFlashMaxAlpha, m_iTeamNum, dwGlowObjectManager, m_iGlowIndex, dwForceJump, m_fFlags, dwForceAttack, m_iCrosshairId, m_bSpotted, m_iShotsFired, m_aimPunchAngle, dwClientState, dwClientState_ViewAngles, m_iObserverMode, m_iDefaultFOV, m_totalHitsOnServer, m_bIsDefusing, m_bGunGameImmunity, m_iHealth, m_dwBoneMatrix, m_vecOrigin, m_vecViewOffset, m_bDormant, dwbSendPackets
+from offsets import calcangle, calc_distance, normalizeAngles, checkangles, nanchecker, dwEntityList, dwLocalPlayer, m_flFlashMaxAlpha, m_iTeamNum, dwGlowObjectManager, m_iGlowIndex, dwForceJump, m_fFlags, dwForceAttack, m_iCrosshairId, m_bSpotted, m_iShotsFired, m_aimPunchAngle, dwClientState, dwClientState_ViewAngles, m_iObserverMode, m_iDefaultFOV, m_totalHitsOnServer, m_bIsDefusing, m_bGunGameImmunity, m_iHealth, m_dwBoneMatrix, m_vecOrigin, m_vecViewOffset, m_bDormant, dwbSendPackets, dwInput, clientstate_last_outgoing_command, clientstate_net_channel
 init()
 
 def Main():
@@ -10,7 +10,6 @@ def Main():
     enablfov = False
     enablereco = False
     enabltp = False
-    testdontenable = False
 
     oldpunchx = 0.0
     oldpunchy = 0.0
@@ -18,7 +17,7 @@ def Main():
     pm = pymem.Pymem("csgo.exe")
     client = pymem.process.module_from_name(pm.process_handle, "client.dll").lpBaseOfDll
     engine = pymem.process.module_from_name(pm.process_handle, "engine.dll").lpBaseOfDll
-    antivac = "!1Li%yMx8sy#a2513I$rv@aS4GSVq5*DWH&UVMsTcsV^!s6%Ia#UL#y9s3P*fymZRM*q8*RO2HpNsyP5j1TeUjhDaIiae2vJv"
+    antivac = "5J9r9*l8rIHwueFJEcmA6"
         # Edit every week so Hash of the file changes
     print(antivac)
     config = configparser.ConfigParser()
@@ -38,6 +37,10 @@ def Main():
         tpkey = mainconfig["tpkey"]
         hss = mainconfig["hss"]
         logeverything = mainconfig.getboolean("logeverything")
+        baim = mainconfig.getboolean("baim")
+        flag = mainconfig.getboolean("flag")
+        hitsounds = mainconfig.getboolean("hitsound")
+        silentshit = mainconfig.getboolean("silentshit")
     except:
         print("Config could not load properly.")
         time.sleep(10)
@@ -56,15 +59,15 @@ def Main():
     print(cfkey + " = CustomFOV (Toggle)")
     print(tpkey + " = ThirdPerson (Toggle)")
     print("--------------------------[MISC]----------------------------")
-    print("Space = Bhop (On)")
+    print("Space = Bhop (Hold)")
     print("---------------------------")
     print("Console:")
 
     while True:
-        if testdontenable:
+        if flag:
             pm.write_uchar(engine + dwbSendPackets, 0)
-            time.sleep(0.1)
-            pm.write_uchar(engine + dwbSendPackets, 1)
+            time.sleep(0.005)
+        pm.write_uchar(engine + dwbSendPackets, 1)
                         
         target = None
         olddistx = 111111111111
@@ -73,7 +76,6 @@ def Main():
         if client and engine and pm:
             try:
                 player = pm.read_int(client + dwLocalPlayer)
-                hitshit = pm.read_int(player + m_totalHitsOnServer)
                 engine_pointer = pm.read_int(engine + dwClientState)
                 glow_manager = pm.read_int(client + dwGlowObjectManager) 
                 crosshairID = pm.read_int(player + m_iCrosshairId) 
@@ -111,29 +113,59 @@ def Main():
                 else:
                 	r,g,b = 0,0,255
 
-                if keyboard.is_pressed(abkey) or mouse.is_pressed(abkey) and player:
-                    if localTeam != entity_team_id and entity_hp > 0:
-                        entity_bones = pm.read_int(entity + m_dwBoneMatrix)
-                        localpos_x_angles = pm.read_float(engine_pointer + dwClientState_ViewAngles)
-                        localpos_y_angles = pm.read_float(engine_pointer + dwClientState_ViewAngles + 0x4)
-                        localpos1 = pm.read_float(player + m_vecOrigin)
-                        localpos2 = pm.read_float(player + m_vecOrigin + 4)
-                        localpos_z_angles = pm.read_float(player + m_vecViewOffset + 0x8)
-                        localpos3 = pm.read_float(player + m_vecOrigin + 8) + localpos_z_angles
-                        entitypos_x = pm.read_float(entity_bones + 0x30 * 8 + 0xC)
-                        entitypos_y = pm.read_float(entity_bones + 0x30 * 8 + 0x1C)
-                        entitypos_z = pm.read_float(entity_bones + 0x30 * 8 + 0x2C)
-                        X, Y = calcangle(localpos1, localpos2, localpos3, entitypos_x, entitypos_y, entitypos_z)
-                        newdist_x, newdist_y = calc_distance(localpos_x_angles, localpos_y_angles, X, Y)
-                        if newdist_x < olddistx and newdist_y < olddisty and newdist_x <= aimfov and newdist_y <= aimfov:
-                            olddistx, olddisty = newdist_x, newdist_y
-                            target, target_hp, target_dormant = entity, entity_hp, entity_dormant
-                            target_x, target_y, target_z = entitypos_x, entitypos_y, entitypos_z
+                if localTeam != entity_team_id and entity_hp > 0:
+                    entity_bones = pm.read_int(entity + m_dwBoneMatrix)
+                    localpos_x_angles = pm.read_float(engine_pointer + dwClientState_ViewAngles)
+                    localpos_y_angles = pm.read_float(engine_pointer + dwClientState_ViewAngles + 0x4)
+                    localpos1 = pm.read_float(player + m_vecOrigin)
+                    localpos2 = pm.read_float(player + m_vecOrigin + 4)
+                    localpos_z_angles = pm.read_float(player + m_vecViewOffset + 0x8)
+                    localpos3 = pm.read_float(player + m_vecOrigin + 8) + localpos_z_angles
+                    if baim:
+                        try:
+                            entitypos_x = pm.read_float(entity_bones + 0x30 * 5 + 0xC)
+                            entitypos_y = pm.read_float(entity_bones + 0x30 * 5 + 0x1C)
+                            entitypos_z = pm.read_float(entity_bones + 0x30 * 5 + 0x2C)
+                        except:
+                            continue
+                    else:
+                        try:
+                            entitypos_x = pm.read_float(entity_bones + 0x30 * 8 + 0xC)
+                            entitypos_y = pm.read_float(entity_bones + 0x30 * 8 + 0x1C)
+                            entitypos_z = pm.read_float(entity_bones + 0x30 * 8 + 0x2C)
+                        except:
+                            continue
+                    X, Y = calcangle(localpos1, localpos2, localpos3, entitypos_x, entitypos_y, entitypos_z)
+                    newdist_x, newdist_y = calc_distance(localpos_x_angles, localpos_y_angles, X, Y)
+                    if newdist_x < olddistx and newdist_y < olddisty and newdist_x <= aimfov and newdist_y <= aimfov:
+                        olddistx, olddisty = newdist_x, newdist_y
+                        target, target_hp, target_dormant = entity, entity_hp, entity_dormant
+                        target_x, target_y, target_z = entitypos_x, entitypos_y, entitypos_z
+                if keyboard.is_pressed(abkey) and player:
                     if target and target_hp > 0 and not target_dormant:
                         x, y = calcangle(localpos1, localpos2, localpos3, target_x, target_y, target_z)
                         normalize_x, normalize_y = normalizeAngles(x, y)
-                        pm.write_float(engine_pointer + dwClientState_ViewAngles, normalize_x)
-                        pm.write_float(engine_pointer + dwClientState_ViewAngles + 0x4, normalize_y)
+                        
+                        if silentshit:
+                            pm.write_uchar(engine + dwbSendPackets, 0)
+                            Commands = pm.read_int(client + dwInput + 0xF4)
+                            VerifedCommands = pm.read_int(client + dwInput + 0xF8)
+                            Desired = pm.read_int(engine_pointer + clientstate_last_outgoing_command) + 2
+                            OldUser = Commands + ((Desired - 1) % 150) * 100
+                            VerifedOldUser = VerifedCommands + ((Desired - 1) % 150) * 0x68
+                            m_buttons = pm.read_int(OldUser + 0x30)
+                            Net_Channel = pm.read_uint(engine_pointer + clientstate_net_channel)
+                            if pm.read_int(Net_Channel + 0x18) >= Desired:
+                                pm.write_float(OldUser + 0x0C, normalize_x)
+                                pm.write_float(OldUser + 0x10, normalize_y)
+                                pm.write_int(OldUser + 0x30, m_buttons | (1 << 0))
+                                pm.write_float(VerifedOldUser + 0x0C, normalize_x)
+                                pm.write_float(VerifedOldUser + 0x10, normalize_y)
+                                pm.write_int(VerifedOldUser + 0x30, m_buttons | (1 << 0))
+                                pm.write_uchar(engine + dwbSendPackets, 1)
+                        else:
+                            pm.write_float(engine_pointer + dwClientState_ViewAngles, normalize_x)
+                            pm.write_float(engine_pointer + dwClientState_ViewAngles + 0x4, normalize_y)
 
                 if enabrad == True:
                     pm.write_int(entity + m_bSpotted, 1)
@@ -149,7 +181,7 @@ def Main():
                     pm.write_float(glow_manager + entity_glow * 0x38 + 0x4, float(r)) #R
                     pm.write_float(glow_manager + entity_glow * 0x38 + 0x8, float(g)) #G
                     pm.write_float(glow_manager + entity_glow * 0x38 + 0xC, float(b)) #B
-                    pm.write_float(glow_manager + entity_glow * 0x38 + 0x10, float(1)) #A
+                    pm.write_float(glow_manager + entity_glow * 0x38 + 0x10, float(255)) #A
                     if enablessep == True:
                         pm.write_int(glow_manager + entity_glow * 0x38 + 0x24, 1) #Enable
                     else:
@@ -159,7 +191,7 @@ def Main():
                     pm.write_float(glow_manager + entity_glow * 0x38 + 0x4, float(r)) #R
                     pm.write_float(glow_manager + entity_glow * 0x38 + 0x8, float(g)) #G
                     pm.write_float(glow_manager + entity_glow * 0x38 + 0xC, float(b)) #B
-                    pm.write_float(glow_manager + entity_glow * 0x38 + 0x10, float(1)) #A
+                    pm.write_float(glow_manager + entity_glow * 0x38 + 0x10, float(255)) #A
                     if enablessep == True:
                         pm.write_int(glow_manager + entity_glow * 0x38 + 0x24, 1) #Enable
                     else:
@@ -186,10 +218,8 @@ def Main():
         if keyboard.is_pressed("space"):
             force_jump = client + dwForceJump
             on_ground = pm.read_int(player + m_fFlags)
-            if player and on_ground and on_ground == 257:
-                pm.write_int(force_jump, 5)
-                time.sleep(0.08)
-                pm.write_int(force_jump, 4)
+            if player and on_ground == 257 or on_ground == 263:
+                pm.write_int(force_jump, 6)
                 if logeverything:
                     print("BHop | hopped")
 
@@ -229,7 +259,7 @@ def Main():
                 rcs_x = pm.read_float(engine_pointer + dwClientState_ViewAngles)
                 rcs_y = pm.read_float(engine_pointer + dwClientState_ViewAngles + 0x4)
                 punchx = pm.read_float(player + m_aimPunchAngle)
-                punchy = pm.read_float(player + m_aimPunchAngle + 0x4)
+                punchy = pm.read_float(player + m_aimPunchAngle + 0x4) # Get Gun Recoil-Pattern
                 newrcsx = rcs_x - (punchx - oldpunchx) * 2
                 newrcsy = rcs_y - (punchy - oldpunchy) * 2
                 oldpunchx = punchx
@@ -255,11 +285,13 @@ def Main():
             else:
                 pm.write_int(player + m_iObserverMode, 0)
 
-        if hitshit > 0:
-            pm.write_int(player + m_totalHitsOnServer, 0)
-            winsound.PlaySound(hss, winsound.SND_FILENAME)
-            if logeverything:
-                print("HitSound | Played")
+        if hitsounds:
+            hitshit = pm.read_int(player + m_totalHitsOnServer)
+            if hitshit > 0:
+                pm.write_int(player + m_totalHitsOnServer, 0)
+                winsound.PlaySound(hss, winsound.SND_FILENAME)
+                if logeverything:
+                    print("HitSound | Played")
     
 if __name__ == "__main__":
     Main()
