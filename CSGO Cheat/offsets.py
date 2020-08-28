@@ -112,3 +112,5 @@ def calcangle(localpos1, localpos2, localpos3, enemypos1, enemypos2, enemypos3):
         return x, y
     except:
         pass
+
+print("done")
