@@ -1,6 +1,7 @@
 # CSGO-Python-Pymem-Cheat-Hack
 
 ye run main.py within a folder where config.ini and offsets.py is present.
+btw delete __pycache__ folder everytime for the offsets to update.
 
 1. GlowESP
 2. TriggerBot
